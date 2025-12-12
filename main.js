@@ -1,4 +1,219 @@
 // ============================================
+// 3D TILT EFFECT ON SOCIAL CARDS
+// ============================================
+const socialCards = document.querySelectorAll('.social-card');
+
+socialCards.forEach(card => {
+    card.addEventListener('mousemove', (e) => {
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        
+        const centerX = rect.width / 2;
+        const centerY = rect.height / 2;
+        
+        const rotateX = (y - centerY) / 10;
+        const rotateY = (centerX - x) / 10;
+        
+        card.style.transform = `
+            translateY(-15px) 
+            scale(1.05) 
+            perspective(1000px) 
+            rotateX(${rotateX}deg) 
+            rotateY(${rotateY}deg)
+        `;
+    });
+    
+    card.addEventListener('mouseleave', () => {
+        card.style.transform = '';
+    });
+    
+    // Créer des particules au hover
+    card.addEventListener('mouseenter', () => {
+        createCardParticles(card);
+    });
+});
+
+function createCardParticles(card) {
+    const colors = {
+        instagram: ['#f09433', '#e6683c', '#dc2743', '#cc2366'],
+        tiktok: ['#00f2ea', '#ff0050', '#00f2ea'],
+        youtube: ['#ff0000', '#ff4444', '#cc0000'],
+        twitch: ['#9146ff', '#772ce8', '#b19cd9']
+    };
+    
+    const cardClass = card.classList[1]; // instagram, tiktok, etc.
+    const particleColors = colors[cardClass] || ['#8b5cf6'];
+    
+    for (let i = 0; i < 8; i++) {
+        const particle = document.createElement('div');
+        particle.className = 'hover-particle';
+        
+        const size = Math.random() * 6 + 3;
+        const color = particleColors[Math.floor(Math.random() * particleColors.length)];
+        const angle = (Math.PI * 2 * i) / 8;
+        const distance = 50 + Math.random() * 30;
+        const duration = 0.6 + Math.random() * 0.4;
+        
+        particle.style.cssText = `
+            position: absolute;
+            width: ${size}px;
+            height: ${size}px;
+            background: ${color};
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            pointer-events: none;
+            z-index: 5;
+            animation: particle-burst ${duration}s ease-out forwards;
+            --angle: ${angle}rad;
+            --distance: ${distance}px;
+            box-shadow: 0 0 10px ${color};
+        `;
+        
+        card.appendChild(particle);
+        
+        setTimeout(() => particle.remove(), duration * 1000);
+    }
+}
+
+// Ajouter l'animation des particules
+const particleStyle = document.createElement('style');
+particleStyle.textContent = `
+    @keyframes particle-burst {
+        0% {
+            transform: translate(-50%, -50%) translate(0, 0) scale(1);
+            opacity: 1;
+        }
+        100% {
+            transform: translate(-50%, -50%) 
+                       translate(
+                           calc(cos(var(--angle)) * var(--distance)),
+                           calc(sin(var(--angle)) * var(--distance))
+                       ) 
+                       scale(0);
+            opacity: 0;
+        }
+    }
+    
+    .hover-particle {
+        will-change: transform, opacity;
+    }
+`;
+document.head.appendChild(particleStyle);
+
+// ============================================
+// EASTER EGG - TRIPLE CLICK ON LOGO
+// ============================================
+const brandLogo = document.querySelector('.brand-logo');
+const easterEggModal = document.getElementById('easterEggModal');
+const easterEggClose = document.querySelector('.easter-egg-close');
+const easterEggOverlay = document.querySelector('.easter-egg-overlay');
+
+let logoClickCount = 0;
+let logoClickTimer = null;
+
+if (brandLogo && easterEggModal) {
+    console.log('✅ Easter egg initialisé ! Clique 5 fois sur le logo KK');
+    
+    brandLogo.addEventListener('click', (e) => {
+        e.preventDefault();
+        logoClickCount++;
+        
+        console.log(`🎯 Clic ${logoClickCount}/5 sur le logo`);
+        
+        // Effet visuel sur le logo
+        brandLogo.style.animation = 'none';
+        setTimeout(() => {
+            brandLogo.style.animation = 'pulse 2s infinite';
+        }, 10);
+        
+        if (logoClickCount === 5) {
+            // Easter egg activé !
+            console.log('🎉🎊 EASTER EGG TROUVÉ ! 🎊🎉');
+            easterEggModal.classList.add('active');
+            logoClickCount = 0;
+            
+            // Confettis
+            createConfetti();
+        }
+        
+        // Reset après 1.5 secondes
+        clearTimeout(logoClickTimer);
+        logoClickTimer = setTimeout(() => {
+            if (logoClickCount > 0) {
+                console.log('⏱️ Timer reset - Recommence à cliquer !');
+            }
+            logoClickCount = 0;
+        }, 1500);
+    });
+} else {
+    console.error('❌ Easter egg non trouvé:', {
+        brandLogo: !!brandLogo,
+        easterEggModal: !!easterEggModal
+    });
+}
+{
+    // Fermer le modal
+    easterEggClose.addEventListener('click', () => {
+        easterEggModal.classList.remove('active');
+    });
+    
+    easterEggOverlay.addEventListener('click', () => {
+        easterEggModal.classList.remove('active');
+    });
+    
+    // Fermer avec Escape
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && easterEggModal.classList.contains('active')) {
+            easterEggModal.classList.remove('active');
+        }
+    });
+}
+
+// Fonction pour créer des confettis
+function createConfetti() {
+    const colors = ['#8b5cf6', '#ec4899', '#06b6d4', '#f59e0b', '#10b981'];
+    
+    for (let i = 0; i < 100; i++) {
+        const confetti = document.createElement('div');
+        confetti.style.cssText = `
+            position: fixed;
+            width: ${Math.random() * 10 + 5}px;
+            height: ${Math.random() * 10 + 5}px;
+            background: ${colors[Math.floor(Math.random() * colors.length)]};
+            top: -10px;
+            left: ${Math.random() * 100}vw;
+            opacity: 1;
+            z-index: 10001;
+            pointer-events: none;
+            animation: confetti-fall ${Math.random() * 3 + 2}s linear forwards;
+            transform: rotate(${Math.random() * 360}deg);
+        `;
+        
+        document.body.appendChild(confetti);
+        
+        setTimeout(() => confetti.remove(), 5000);
+    }
+}
+
+// Animation des confettis
+const confettiStyle = document.createElement('style');
+confettiStyle.textContent = `
+    @keyframes confetti-fall {
+        0% {
+            transform: translateY(0) rotate(0deg);
+            opacity: 1;
+        }
+        100% {
+            transform: translateY(100vh) rotate(720deg);
+            opacity: 0;
+        }
+    }
+`;
+document.head.appendChild(confettiStyle);
+
+// ============================================
 // NAVIGATION MOBILE
 // ============================================
 const navToggle = document.querySelector('.nav-toggle');
@@ -212,89 +427,47 @@ function typeWriter(element, text, speed = 100) {
 // }
 
 // ============================================
-// FORM VALIDATION
+// COPY EMAIL TO CLIPBOARD
 // ============================================
-const contactForm = document.querySelector('.contact-form');
+const copyEmailBtn = document.querySelector('.copy-email-btn');
+const copyFeedback = document.querySelector('.copy-feedback');
 
-if (contactForm) {
-    contactForm.addEventListener('submit', (e) => {
-        const nameInput = document.getElementById('name');
-        const emailInput = document.getElementById('email');
-        const messageInput = document.getElementById('message');
+if (copyEmailBtn) {
+    copyEmailBtn.addEventListener('click', () => {
+        const email = copyEmailBtn.getAttribute('data-email');
         
-        let isValid = true;
-        
-        // Validation simple
-        if (nameInput.value.trim().length < 2) {
-            showError(nameInput, 'Le nom doit contenir au moins 2 caractères');
-            isValid = false;
-        } else {
-            removeError(nameInput);
-        }
-        
-        if (!isValidEmail(emailInput.value)) {
-            showError(emailInput, 'Veuillez entrer une adresse email valide');
-            isValid = false;
-        } else {
-            removeError(emailInput);
-        }
-        
-        if (messageInput.value.trim().length < 10) {
-            showError(messageInput, 'Le message doit contenir au moins 10 caractères');
-            isValid = false;
-        } else {
-            removeError(messageInput);
-        }
-        
-        if (!isValid) {
-            e.preventDefault();
-        }
+        // Copier dans le presse-papier
+        navigator.clipboard.writeText(email).then(() => {
+            // Afficher le message de confirmation
+            copyFeedback.classList.add('show');
+            
+            // Changer l'icône temporairement
+            const icon = copyEmailBtn.querySelector('i');
+            icon.className = 'fas fa-check';
+            copyEmailBtn.style.borderColor = 'var(--accent-color)';
+            copyEmailBtn.style.color = 'var(--accent-color)';
+            
+            // Réinitialiser après 2 secondes
+            setTimeout(() => {
+                copyFeedback.classList.remove('show');
+                icon.className = 'fas fa-copy';
+                copyEmailBtn.style.borderColor = '';
+                copyEmailBtn.style.color = '';
+            }, 2000);
+        }).catch(err => {
+            console.error('Erreur lors de la copie:', err);
+            copyFeedback.textContent = 'Erreur lors de la copie';
+            copyFeedback.style.color = '#ef4444';
+            copyFeedback.classList.add('show');
+            
+            setTimeout(() => {
+                copyFeedback.classList.remove('show');
+                copyFeedback.textContent = 'Adresse copiée !';
+                copyFeedback.style.color = '';
+            }, 2000);
+        });
     });
 }
-
-function isValidEmail(email) {
-    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return re.test(email);
-}
-
-function showError(input, message) {
-    const formGroup = input.parentElement;
-    let errorElement = formGroup.querySelector('.error-message');
-    
-    if (!errorElement) {
-        errorElement = document.createElement('span');
-        errorElement.className = 'error-message';
-        errorElement.style.cssText = `
-            color: #ef4444;
-            font-size: 0.875rem;
-            display: block;
-            margin-top: 0.25rem;
-        `;
-        formGroup.appendChild(errorElement);
-    }
-    
-    errorElement.textContent = message;
-    input.style.borderColor = '#ef4444';
-}
-
-function removeError(input) {
-    const formGroup = input.parentElement;
-    const errorElement = formGroup.querySelector('.error-message');
-    
-    if (errorElement) {
-        errorElement.remove();
-    }
-    
-    input.style.borderColor = '';
-}
-
-// Enlever l'erreur lors de la saisie
-const formInputs = document.querySelectorAll('.contact-form input, .contact-form textarea');
-formInputs.forEach(input => {
-    input.addEventListener('input', () => {
-        removeError(input);
-    });
-});
 
 // ============================================
 // EASTER EGG - KONAMI CODE
@@ -347,6 +520,55 @@ if ('loading' in HTMLImageElement.prototype) {
 }
 
 // ============================================
+// SECRET IMAGE EASTER EGG
+// ============================================
+const secretImage = document.getElementById('secretImage');
+const secretClose = document.querySelector('.secret-close');
+const aboutSection = document.getElementById('about');
+let aboutClicks = 0;
+let clickTimeout;
+
+// Trigger: 3 clics rapides sur la section About
+aboutSection.addEventListener('click', () => {
+    aboutClicks++;
+    console.log(`🔍 Clics sur About: ${aboutClicks}/3`);
+    
+    clearTimeout(clickTimeout);
+    
+    if (aboutClicks === 3) {
+        console.log('🎉 Secret image débloquée!');
+        secretImage.classList.add('show');
+        document.body.style.overflow = 'hidden';
+        aboutClicks = 0;
+    }
+    
+    clickTimeout = setTimeout(() => {
+        aboutClicks = 0;
+    }, 1000);
+});
+
+// Fermer avec le bouton
+secretClose.addEventListener('click', () => {
+    console.log('❌ Secret image fermée');
+    secretImage.classList.remove('show');
+    document.body.style.overflow = '';
+});
+
+// Fermer en cliquant sur l'overlay
+document.querySelector('.secret-overlay').addEventListener('click', () => {
+    secretImage.classList.remove('show');
+    document.body.style.overflow = '';
+});
+
+// Fermer avec Echap
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && secretImage.classList.contains('show')) {
+        secretImage.classList.remove('show');
+        document.body.style.overflow = '';
+    }
+});
+
+// ============================================
 // CONSOLE MESSAGE
 // ============================================
 console.log(
@@ -362,4 +584,14 @@ console.log(
 console.log(
     '%cTu veux voir le code source ? Retrouve-moi sur GitHub!',
     'color: #06b6d4; font-size: 12px;'
+);
+
+console.log(
+    '%c🔍 Easter Egg 1: Clique 5 fois sur le logo KK',
+    'color: #8b5cf6; font-size: 11px; font-style: italic;'
+);
+
+console.log(
+    '%c🔍 Easter Egg 2: Clique 3 fois sur la section About',
+    'color: #ec4899; font-size: 11px; font-style: italic;'
 );

@@ -54,11 +54,6 @@
                     <a href="#contact" class="btn btn-secondary">Me contacter</a>
                 </div>
             </div>
-            <div class="hero-image">
-                <div class="image-wrapper">
-                    <img src="img/kkhuete.avif" alt="kkhuete photo" class="profile-hero">
-                </div>
-            </div>
         </div>
         <div class="scroll-indicator">
             <i class="fas fa-chevron-down"></i>
@@ -75,7 +70,7 @@
             <div class="bio-content">
                 <div class="bio-image">
                     <div class="image-frame">
-                        <img src="img/kkhuete.avif" alt="kkhuete photo de profil">
+                        <img src="img/Le_Chat.png" alt="kkhuete photo de profil">
                         <div class="image-overlay"></div>
                     </div>
                 </div>
@@ -196,42 +191,22 @@
                 <div class="title-underline"></div>
             </div>
             <div class="contact-wrapper">
-                <form class="contact-form" action="mailto:contact@kkhuete.com" method="post" enctype="text/plain">
-                    <div class="form-group">
-                        <label for="name">
-                            <i class="fas fa-user"></i>
-                            Nom
-                        </label>
-                        <input type="text" id="name" name="name" placeholder="Votre nom" required>
+                <div class="contact-email-card">
+                    <div class="email-icon">
+                        <i class="fas fa-envelope"></i>
                     </div>
-                    
-                    <div class="form-group">
-                        <label for="email">
-                            <i class="fas fa-envelope"></i>
-                            Email
-                        </label>
-                        <input type="email" id="email" name="email" placeholder="votre.email@exemple.com" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="message">
-                            <i class="fas fa-comment"></i>
-                            Message
-                        </label>
-                        <textarea id="message" name="message" rows="5" placeholder="Votre message..." required></textarea>
-                    </div>
-                    
-                    <div class="form-buttons">
-                        <button type="submit" class="btn btn-primary">
-                            <i class="fas fa-paper-plane"></i>
-                            Envoyer
-                        </button>
-                        <button type="reset" class="btn btn-secondary">
-                            <i class="fas fa-redo"></i>
-                            Réinitialiser
-                        </button>
-                    </div>
-                </form>
+                    <h3>Envoyez-moi un email</h3>
+                    <p class="email-description">Pour toute question, collaboration ou demande d'information</p>
+                    <a href="mailto:kkhuetei.contact@gmail.com" class="email-link">
+                        <i class="fas fa-paper-plane"></i>
+                        kkhuetei.contact@gmail.com
+                    </a>
+                    <button class="copy-email-btn" data-email="kkhuetei.contact@gmail.com">
+                        <i class="fas fa-copy"></i>
+                        Copier l'adresse
+                    </button>
+                    <p class="copy-feedback">Adresse copiée !</p>
+                </div>
             </div>
         </div>
     </section>
@@ -271,5 +246,51 @@
     <button class="scroll-top" aria-label="Retour en haut">
         <i class="fas fa-arrow-up"></i>
     </button>
+
+    <!-- Secret Image Easter Egg -->
+    <div class="secret-image-container" id="secretImage">
+        <div class="secret-overlay"></div>
+        <div class="secret-content">
+            <button class="secret-close">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="secret-frame">
+                <img src="img/kkhuete.avif" alt="Secret découvert" class="secret-photo">
+                <div class="secret-sparkles">
+                    <span class="sparkle">✨</span>
+                    <span class="sparkle">✨</span>
+                    <span class="sparkle">✨</span>
+                    <span class="sparkle">✨</span>
+                </div>
+            </div>
+            <p class="secret-text">🔍 Tu m'as trouvée ! 🔍</p>
+        </div>
+    </div>
+
+    <!-- Easter Egg Modal -->
+    <div class="easter-egg-modal" id="easterEggModal">
+        <div class="easter-egg-overlay"></div>
+        <div class="easter-egg-content">
+            <button class="easter-egg-close" aria-label="Fermer">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="easter-egg-frame">
+                <img src="img/kkhuete.avif" alt="Easter Egg" class="easter-egg-image">
+                <div class="easter-egg-stickers">
+                    <span class="sticker sticker-1">🐝</span>
+                    <span class="sticker sticker-2">🐱</span>
+                    <span class="sticker sticker-3">🌸</span>
+                    <span class="sticker sticker-4">✨</span>
+                    <span class="sticker sticker-5">🎮</span>
+                    <span class="sticker sticker-6">💜</span>
+                </div>
+                <div class="twitch-badge">
+                    <i class="fab fa-twitch"></i>
+                    <span>KKhuetei</span>
+                </div>
+            </div>
+            <p class="easter-egg-text">🎉 Tu as trouvé l'easter egg ! 🎉</p>
+        </div>
+    </div>
 </body>
 </html>
